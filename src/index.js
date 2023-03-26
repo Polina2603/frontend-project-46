@@ -17,9 +17,9 @@ const isObjectEmpty = (obj) => {
   return false;
 };
 
-const getDiff = (filepath1, filepath2) => {
-  const file1 = JSON.parse(readFileSync(path.resolve(filepath1)));
-  const file2 = JSON.parse(readFileSync(path.resolve(filepath2)));
+const genDiff = (filepath1, filepath2) => {
+  const file1 = JSON.parse(readFileSync(path.resolve('_fixtures_', filepath1)));
+  const file2 = JSON.parse(readFileSync(path.resolve('_fixtures_', filepath2)));
   if (isObjectEmpty(file1) && isObjectEmpty(file2)) { // Пограничный случай - пустые объекты
     return 'Files are empty!';
   }
@@ -46,4 +46,4 @@ const getDiff = (filepath1, filepath2) => {
   return makeString(result);
 };
 
-export default getDiff;
+export default genDiff;

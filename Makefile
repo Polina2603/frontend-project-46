@@ -12,5 +12,8 @@ publish:	#Проверка публикации
 lint:		#Проверка линтером
 	npx eslint .
 
-jest:		#Запуск тестов
+test: #Запуск тестов Jest
+	NODE_OPTIONS=--experimental-vm-modules npx jest
+
+test-coverage: #Запуск теста покрытия тестами
 	NODE_OPTIONS=--experimental-vm-modules npx jest --coverage
