@@ -18,3 +18,7 @@ test('get difference / json', () => {
     expect(getDiff(getFixturePath('file1.json'), getFixturePath('file2.json'))).toEqual(comparisonResult);
     expect(getDiff(getFixturePath('emptyFile1.json'), getFixturePath('emptyFile2.json'))).toEqual('Files are empty!');
 });
+test('get difference / yaml', () => {
+  expect(getDiff(getFixturePath('file1.yml'), getFixturePath('file2.yml'))).toEqual(comparisonResult);
+  expect(getDiff(getFixturePath('emptyFile1.yml'), getFixturePath('emptyFile1.yml'))).toEqual('Files are empty!');
+});
