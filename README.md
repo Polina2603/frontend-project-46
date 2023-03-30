@@ -5,3 +5,5 @@
 [![Jest and ESLint](https://github.com/Polina2603/frontend-project-46/actions/workflows/main.yml/badge.svg)](https://github.com/Polina2603/frontend-project-46/actions/workflows/main.yml)
 
 <a href="https://asciinema.org/a/0pttSWQCO05WLtYRM2ce6aqCZ" target="_blank"><img src="https://asciinema.org/a/0pttSWQCO05WLtYRM2ce6aqCZ.svg" /></a>
+<h2> Stylish: </h2>
+<a href="https://asciinema.org/a/YfVL6RONqsgJykqIzEKmnX75l" target="_blank"><img src="https://asciinema.org/a/YfVL6RONqsgJykqIzEKmnX75l.svg" /></a>
