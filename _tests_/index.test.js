@@ -1,24 +1,55 @@
-/* eslint-disable max-len */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable indent */
-/* eslint-disable import/extensions */
-
-import path, { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { test, expect } from '@jest/globals';
-import getDiff from '../src/index.js';
+import genDiff from '../src/index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const getFixturePath = (filename) => path.join(__dirname, '..', '_fixtures_', filename);
+const expectedRecursive = `{
+    common: {
+      + follow: false
+        setting1: Value 1
+      - setting2: 200
+      - setting3: true
+      + setting3: null
+      + setting4: blah blah
+      + setting5: {
+            key5: value5
+        }
+        setting6: {
+            doge: {
+              - wow: 
+              + wow: so much
+            }
+            key: value
+          + ops: vops
+        }
+    }
+    group1: {
+      - baz: bas
+      + baz: bars
+        foo: bar
+      - nest: {
+            key: value
+        }
+      + nest: str
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+  + group3: {
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
+    }
+}`;
 
-const comparisonResult = '{\n- follow: false\n  host: hexlet.io\n- proxy: 123.234.53.22\n- timeout: 50\n+ timeout: 20\n+ verbose: true\n}';
-
-test('get difference / json', () => {
-    expect(getDiff(getFixturePath('file1.json'), getFixturePath('file2.json'))).toEqual(comparisonResult);
-    expect(getDiff(getFixturePath('emptyFile1.json'), getFixturePath('emptyFile2.json'))).toEqual('Files are empty!');
+test('gendiff JSON recursive', () => {
+  expect(genDiff('_fixtures_/file1.json', '_fixtures_/file2.json')).toEqual(expectedRecursive);
 });
-test('get difference / yaml', () => {
-  expect(getDiff(getFixturePath('file1.yml'), getFixturePath('file2.yml'))).toEqual(comparisonResult);
-  expect(getDiff(getFixturePath('emptyFile1.yml'), getFixturePath('emptyFile1.yml'))).toEqual('Files are empty!');
+
+test('gendiff YAML recursive', () => {
+  expect(genDiff('_fixtures_/file1.yml', '_fixtures_/file2.yml')).toEqual(expectedRecursive);
 });
