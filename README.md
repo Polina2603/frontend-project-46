@@ -7,3 +7,5 @@
 <a href="https://asciinema.org/a/0pttSWQCO05WLtYRM2ce6aqCZ" target="_blank"><img src="https://asciinema.org/a/0pttSWQCO05WLtYRM2ce6aqCZ.svg" /></a>
 <h2> Stylish: </h2>
 <a href="https://asciinema.org/a/YfVL6RONqsgJykqIzEKmnX75l" target="_blank"><img src="https://asciinema.org/a/YfVL6RONqsgJykqIzEKmnX75l.svg" /></a>
+<h2> Plain^ </h2>
+<a href="https://asciinema.org/a/71FCkd9mYjlUbz3oCAxLUIKM3" target="_blank"><img src="https://asciinema.org/a/71FCkd9mYjlUbz3oCAxLUIKM3.svg" /></a>

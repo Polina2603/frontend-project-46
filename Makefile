@@ -23,3 +23,6 @@ run:
 
 run2:
 	gendiff  './_fixtures_/file1.yml' './_fixtures_/file2.yml' 
+
+run3:
+	gendiff --format plain './_fixtures_/file1.json' './_fixtures_/file2.json' 

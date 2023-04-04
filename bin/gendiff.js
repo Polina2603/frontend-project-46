@@ -9,8 +9,9 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .argument('filepath1')
   .argument('filepath2')
-  .action((filepath1, filepath2) => {
-    // eslint-disable-next-line no-console
-    console.log(genDiff(filepath1, filepath2));
+  .action((filepath1, filepath2, cmdObj) => {
+    const diff = genDiff(filepath1, filepath2, cmdObj.format);
+    console.log(diff);
   });
+
 program.parse();
