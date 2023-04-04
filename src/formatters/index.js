@@ -2,16 +2,15 @@ import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
-const formatTree = (tree, style) => {
-  switch (style) {
+export default (data, format) => {
+  switch (format) {
     case 'stylish':
-      return stylish(tree);
+      return stylish(data);
     case 'plain':
-      return plain(tree);
+      return plain(data);
     case 'json':
-      return json(tree);
+      return json(data);
     default:
-      throw new Error(`Unknown style: '${style}'!`);
+      return `Error: Unknown type: ${format}`;
   }
 };
-export default formatTree;

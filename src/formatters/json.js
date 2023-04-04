@@ -1,3 +1,3 @@
-const json = (tree) => JSON.stringify(tree);
+const json = (data) => JSON.stringify(data);
 
 export default json;

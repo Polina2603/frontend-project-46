@@ -26,3 +26,6 @@ run2:
 
 run3:
 	gendiff --format plain './_fixtures_/file1.json' './_fixtures_/file2.json' 
+
+run4:
+	gendiff --format json './_fixtures_/file1.json' './_fixtures_/file2.json' 

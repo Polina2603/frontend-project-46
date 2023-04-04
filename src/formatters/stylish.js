@@ -1,68 +1,55 @@
-import has from 'lodash/has.js';
+const indent = (depth, spacesCount = 2) => '  '.repeat(spacesCount * depth);
 
-const hasChildren = (item) => has(item, 'children');
-const getName = (item) => item.name;
-const getValue = (item) => item.value;
-const getChange = (item) => item.isChanged;
-const getDepth = (item) => item.depth;
-const getChildren = (item) => item.children;
-const generateSpaces = (spaceCount) => {
-  const result = [];
-  for (let i = 0; i < spaceCount; i += 1) {
-    result.push(' ');
+const signIndent = (depth, spacesCount = 2) => '  '.repeat(spacesCount * depth).slice(2);
+
+const stringify = (value, treeDepth) => {
+  if (typeof value !== 'object' || value === null) {
+    return String(value);
   }
-  return result.join('');
-};
-const stylish = (tree) => {
-  let space;
-  let closingSpace;
-  const result = tree.reduce((acc, item) => {
-    const name = getName(item);
-    const [value, changed] = getValue(item);
-    const change = getChange(item);
-    const depth = getDepth(item);
-    const itemHasChildren = hasChildren(item);
-    const children = getChildren(item);
-    const spaceCount = depth * 4 - 2;
-    const closingSpaceCount = (depth - 1) * 4;
-    space = generateSpaces(spaceCount);
-    closingSpace = generateSpaces(closingSpaceCount);
-    let string;
-    let secondString;
-    switch (change) {
-      case 'added':
-        string = itemHasChildren ? `${space}+ ${name}: ${stylish(children)}` : `${space}+ ${name}: ${value}`;
-        acc.push(string);
-        return acc;
-      case 'deleted':
-        string = itemHasChildren ? `${space}- ${name}: ${stylish(children)}` : `${space}- ${name}: ${value}`;
-        acc.push(string);
-        return acc;
-      case 'not changed':
-        string = `${space}  ${name}: ${value}`;
-        acc.push(string);
-        return acc;
-      case 'changed inside':
-        string = `${space}  ${name}: ${stylish(children)}`;
-        acc.push(string);
-        return acc;
-      case 'changed':
-        string = itemHasChildren ? `${space}- ${name}: ${stylish(children)}` : `${space}- ${name}: ${value}`;
-        secondString = itemHasChildren ? `${space}+ ${name}: ${value}` : `${space}+ ${name}: ${changed}`;
-        acc.push(string);
-        acc.push(secondString);
-        return acc;
-      case 'changed to obj':
-        string = `${space}- ${name}: ${value}`;
-        secondString = `${space}+ ${name}: ${stylish(children)}`;
-        acc.push(string);
-        acc.push(secondString);
-        return acc;
-      default:
-        throw new Error(`Unknown change: '${change}'!`);
-    }
-  }, ['{']);
-  return `${result.join('\n')}\n${closingSpace}}`;
+
+  const arrayValue = Object.entries(value);
+  const lines = arrayValue.map(
+    ([key, val]) => `${indent(treeDepth + 1)}${key}: ${stringify(val, treeDepth + 1)}`,
+  );
+
+  return ['{', ...lines, `${indent(treeDepth)}}`].join('\n');
 };
 
-export default stylish;
+export default (innerTree) => {
+  const signes = {
+    add: '+',
+    deduct: '-',
+    emptySpace: ' ',
+  };
+
+  const iter = (tree, depth) => tree.map((item) => {
+    const typeDiff = item.type;
+
+    const getValue = (valuee, sign) => `${signIndent(depth)}${sign} ${item.key}: ${stringify(
+      valuee,
+      depth,
+    )}\n`;
+    switch (typeDiff) {
+      case 'object':
+        return `${indent(depth)}${item.key}: {\n${iter(
+          item.children,
+          depth + 1,
+        ).join('')}${indent(depth)}}\n`;
+      case 'added':
+        return getValue(item.val, signes.add);
+      case 'deleted':
+        return getValue(item.val, signes.deduct);
+      case 'unchanged':
+        return getValue(item.val, signes.emptySpace);
+      case 'changed':
+        return `${getValue(item.val1, signes.deduct)}${getValue(
+          item.val2,
+          signes.add,
+        )}`;
+      default:
+        return `Error: Unknown type: ${item.type}`;
+    }
+  });
+
+  return `{\n${iter(innerTree, 1).join('')}}`;
+};

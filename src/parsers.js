@@ -1,19 +1,17 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import yaml from 'js-yaml';
-import path from 'path';
 
-const extractFormat = (filepath) => path.extname(filepath).slice(1);
-
-const convertToObject = (filepath, file) => {
-  switch (extractFormat(filepath)) {
+const parser = (fileContent, fileFormat) => {
+  switch (fileFormat) {
     case 'json':
-      return JSON.parse(file);
+      return JSON.parse(fileContent);
     case 'yml':
+      return yaml.load(fileContent);
     case 'yaml':
-      return yaml.load(file);
+      return yaml.load(fileContent);
     default:
-      throw new Error(`Unknown format: '${extractFormat(filepath)}'!`);
+      return `This format is not supported: ${fileFormat}`;
   }
 };
 
-export default convertToObject;
+export default parser;

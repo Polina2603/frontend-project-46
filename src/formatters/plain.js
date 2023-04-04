@@ -1,44 +1,36 @@
-import has from 'lodash/has.js';
+import _ from 'lodash';
 
-const hasChildren = (item) => has(item, 'children');
-const getName = (item) => item.name;
-const getValue = (item) => item.value;
-const getChange = (item) => item.isChanged;
-const getChildren = (item) => item.children;
-const normalizeValue = (value) => (typeof value === 'string' ? `'${value}'` : value);
-
-const plain = (tree1) => {
-  const iter = (tree, path) => {
-    const result = tree.flatMap((item) => {
-      const name = path.length > 0 ? `${path}.${getName(item)}` : getName(item);
-      const change = getChange(item);
-      const [value, changed] = getValue(item);
-      const normalizedValue = normalizeValue(value);
-      const normalizedChanged = normalizeValue(changed);
-      const itemHasChildren = hasChildren(item);
-      const children = getChildren(item);
-      switch (change) {
-        case 'added':
-          return itemHasChildren
-            ? `Property '${name}' was added with value: [complex value]`
-            : `Property '${name}' was added with value: ${normalizedValue}`;
-        case 'deleted':
-          return `Property '${name}' was removed`;
-        case 'changed inside':
-          return iter(children, name);
-        case 'changed':
-          return itemHasChildren
-            ? `Property '${name}' was updated. From [complex value] to ${normalizedValue}`
-            : `Property '${name}' was updated. From ${normalizedValue} to ${normalizedChanged}`;
-        case 'changed to obj':
-          return `Property '${name}' was updated. From ${normalizedValue} to [complex value]`;
-        default:
-          return [];
-      }
-    }, []);
-    return result;
-  };
-  return iter(tree1, '').filter(Boolean).join('\n');
+const stringify = (value) => {
+  if (_.isObject(value)) {
+    return '[complex value]';
+  } if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+  return String(value);
 };
 
-export default plain;
+export default (data) => {
+  const iter = (node, key = '') => {
+    const result = node.flatMap((item) => {
+      const newKeys = [...key, item.key];
+
+      switch (item.type) {
+        case 'object':
+          return iter(item.children, newKeys);
+        case 'added':
+          return `Property '${newKeys.join('.')}' was added with value: ${stringify(item.val)}`;
+        case 'deleted':
+          return `Property '${newKeys.join('.')}' was removed`;
+        case 'unchanged':
+          return null;
+        case 'changed':
+          return `Property '${newKeys.join('.')}' was updated. From ${stringify(item.val1)} to ${stringify(item.val2)}`;
+        default:
+          return `Unknown type ${item.type}`;
+      }
+    });
+
+    return result.filter((item) => item !== null).join('\n');
+  };
+  return iter(data, []);
+};
